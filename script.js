@@ -17,7 +17,7 @@ async function getJson(city){
         };
     }
     catch{
-        console.log('City not found!')
+        handleError();
     }
 }
 
@@ -33,4 +33,70 @@ function getTime(unixTimestamp){
     return {time, date};
 }
 
-getJson('cuttack').then(res => console.table(res));
+const searchBtn = document.getElementById('searchBtn');
+const searchBar = document.querySelector('.search-bar');
+const citySearch = document.getElementById('citySearch');
+const citySubmit = document.getElementById('citySubmit');
+const cityName = document.querySelector('.name');
+const desc = document.querySelector('.desc');
+const feelsLike = document.querySelector('.feels-like');
+const temp = document.querySelector('.temp');
+const tempMin = document.querySelector('.temp-min');
+const tempMax = document.querySelector('.temp-max');
+const sunrise = document.querySelector('.sunrise');
+const sunset = document.querySelector('.sunset');
+const humidity = document.querySelector('.humidity');
+const clouds = document.querySelector('.clouds');
+
+citySearch.addEventListener('keydown', (e) => {
+    if(e.keyCode === 13){
+        searchBar.classList.remove('show');
+        searchBtn.style.display = 'block';
+
+        getJson(citySearch.value).then(res => {
+            loadContent(res);
+        });
+    }
+});
+
+searchBtn.addEventListener('click', (e) => {
+    searchBar.classList.add('show');
+    e.target.style.display = 'none';
+});
+
+citySubmit.addEventListener('click', () => {
+    searchBar.classList.remove('show');
+    searchBtn.style.display = 'block';
+
+    getJson(citySearch.value).then(res => {
+        loadContent(res);
+    });
+});
+
+function loadContent(res){
+    cityName.textContent = res.name;
+    desc.textContent = res.weather;
+    temp.textContent = `${res.temp} °C`;
+    feelsLike.textContent = `Feels like ${res.feelsLike} °C`;
+    tempMin.textContent = `Minimum temperature - ${res.tempMin} °C`;
+    tempMax.textContent = `Maximum temperature - ${res.tempMax} °C`;
+    sunrise.textContent = `Sunrise - ${res.sunrise} IST`;
+    sunset.textContent = `Sunset - ${res.sunset} IST`;
+    humidity.textContent = `Humidity - ${res.humidity}%`;
+    clouds.textContent = `Clouds - ${res.clouds}%`;
+}
+
+function handleError(){
+    cityName.textContent = 'Oops! City Not Found!';
+    desc.textContent = '';
+    temp.textContent = ``;
+    feelsLike.textContent = ``;
+    tempMin.textContent = ``;
+    tempMax.textContent = ``;
+    sunrise.textContent = ``;
+    sunset.textContent = ``;
+    humidity.textContent = ``;
+    clouds.textContent = ``;
+}
+
+getJson('bhubaneswar').then(res => loadContent(res));
