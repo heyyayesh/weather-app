@@ -1,9 +1,9 @@
 async function getJson(city){
     try{
-        const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=01c11d354d867a15cbad8f667e806a55&units=metric`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=01c11d354d867a15cbad8f667e806a55&units=metric`);
         const cityData = await response.json();
         return {
-            name: cityData.name,
+            cityName: cityData.name,
             date: getTime(cityData.sys.sunrise).date,
             weather: cityData.weather[0].description,
             temp: cityData.main.temp,
@@ -74,7 +74,7 @@ citySubmit.addEventListener('click', () => {
 });
 
 function loadContent(res){
-    cityName.textContent = res.name;
+    cityName.textContent = res.cityName;
     desc.textContent = res.weather;
     temp.textContent = `${res.temp} °C`;
     feelsLike.textContent = `Feels like ${res.feelsLike} °C`;
